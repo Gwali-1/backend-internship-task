@@ -28,18 +28,30 @@ def create_account(db:Session, user:schema.UserCreate):
 
 
 def login(db:Session, user:schema.UserLogin):
-    email = user.username
+    username = user.username
     password = user.password
-    existing_user =  db.query(models.Users).filter(models.Users.email == email).first()
+    existing_user =  db.query(models.Users).filter(models.Users.username == username).first()
     if existing_user:
         if verify_password(password, existing_user.password):
              return existing_user
     return False
 
 
+#create calorie reord/ before check for calories inserted that day
+#when testing check if field is false
 
-def get_user_with_username(db:Session, email:str):
-    user = db.query(models.Users).filter(models.Users.email == email).first()
+
+#get users
+#create user
+#deleete user
+#get users by role,
+
+#add record
+#get records
+#get records by user id , by time , date , below_limit
+
+def get_user_with_username(db:Session, username:str):
+    user = db.query(models.Users).filter(models.Users.username == username).first()
     if not user:
         return False
     return user

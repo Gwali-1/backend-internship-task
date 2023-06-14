@@ -35,7 +35,6 @@ def create_user_account(user: schema.UserCreate, db: Session = Depends(get_db_se
 
 
 
-
 @router.post("/login", response_model=schema.Token)
 def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:Session=Depends(get_db_session)):
     data = {

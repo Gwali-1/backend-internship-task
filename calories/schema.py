@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from datetime import date,time
+
 
 ##################### token
 class Token(BaseModel):
@@ -38,8 +39,9 @@ class Record(BaseModel):
 
 #record info to create a record
 class RecordCreate(BaseModel):
-    food_name:str
+    food_name:str = Field(min_length=2)
     calories:float
+
 
 
     class Config:
@@ -47,16 +49,18 @@ class RecordCreate(BaseModel):
 
 #user info to  create a user account
 class UserCreate(BaseModel):
-    username:str
-    password:str
+    username: str = Field(min_length=2)
+    password: str = Field(min_length=2)
     confirm_password:str
 
     class Config:
         orm_mode=True
 
 class UserLogin(BaseModel):
-    username:str
-    password:str
+    username:str = Field(min_length=2)
+    password:str = Field(min_length=2)
+
+
 
     class Config:
         orm_mode=True
