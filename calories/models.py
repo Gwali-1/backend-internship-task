@@ -9,7 +9,6 @@ class Users(Base):
     id = Column(Integer,primary_key=True,index=True)
     email = Column(String)
     password = Column(String)
-    calorie_limit = Column(Float)
     role = relationship("Roles")
     settings = relationship("UserSettings")
     records_entered = relationship("CalorieRecords")
@@ -35,6 +34,7 @@ class CalorieRecords(Base):
     __tablename__ = "records"
     id = Column(Integer,primary_key=True,index=True)
     food_name= Column(String)
+    calories= Column(Float)
     date=Column(Date,default=func.date(func.now()))
     time=Column(Time, default=func.time(func.now()))
     owner = Column(Integer,ForeignKey("users.id"), nullable=False)
