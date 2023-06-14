@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 from datetime import date,time
 
+##################### token
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 
 #user setting info
 class Setting(BaseModel):
@@ -44,9 +49,18 @@ class RecordCreate(BaseModel):
 class UserCreate(BaseModel):
     email:str
     password:str
+    confirm_password:str
 
     class Config:
         orm_mode=True
+
+class UserLogin(BaseModel):
+    email:str
+    password:str
+
+    class Config:
+        orm_mode=True
+
 
 #user info returned when requested
 class User(BaseModel):
