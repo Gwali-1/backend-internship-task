@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date,time
 
 
-
+#user setting info
 class Setting(BaseModel):
     calorie_limit:float
 
@@ -10,7 +10,7 @@ class Setting(BaseModel):
     class Config:
         orm_mode=True
 
-
+#user role info
 class Role(BaseModel):
     role:str
 
@@ -18,7 +18,7 @@ class Role(BaseModel):
     class Config:
         orm_mode=True
 
-
+#record info sent as response
 class Record(BaseModel):
     id:int
     food_name:str
@@ -31,7 +31,7 @@ class Record(BaseModel):
     class Config:
         orm_mode=True
 
-
+#record info to create a record
 class RecordCreate(BaseModel):
     food_name:str
     calories:float
@@ -40,7 +40,7 @@ class RecordCreate(BaseModel):
     class Config:
         orm_mode=True
 
-
+#user info to  create a user account
 class UserCreate(BaseModel):
     email:str
     password:str
@@ -48,7 +48,7 @@ class UserCreate(BaseModel):
     class Config:
         orm_mode=True
 
-
+#user info returned when requested
 class User(BaseModel):
     id:int
     email:str
