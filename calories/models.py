@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 class Users(Base):
     __tablename__ = "users"
     id = Column(Integer,primary_key=True,index=True)
-    email = Column(String)
+    username = Column(String)
     password = Column(String)
     role = relationship("Roles")
     settings = relationship("UserSettings")
@@ -17,6 +17,7 @@ class Users(Base):
 
 class UserSettings(Base):
     __tablename__ = "user_settings"
+    id = Column(Integer,primary_key=True,index=True)
     calorie_limit = Column(Float)
     user_id = Column(Integer,ForeignKey("users.id"), nullable=False)
 

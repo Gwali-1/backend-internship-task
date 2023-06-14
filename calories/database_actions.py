@@ -7,14 +7,13 @@ from .dependencies  import hash_password, verify_password
 
 
 def create_account(db:Session, user:schema.UserCreate):
-    email = user.email
+    username =user.username
     password = user.password
     confirm_password = user.confirm_password
 
     if password != confirm_password:
         raise HTTPException(status_code=401, detail="passwords are not the same")
-    email= user.email
-    new_user = models.Users(email=email, password=hash_password(password))
+    new_user = models.Users(username=username, password=hash_password(password))
     db.add(new_user)
     try:
         db.commit()
@@ -29,7 +28,7 @@ def create_account(db:Session, user:schema.UserCreate):
 
 
 def login(db:Session, user:schema.UserLogin):
-    email = user.email
+    email = user.username
     password = user.password
     existing_user =  db.query(models.Users).filter(models.Users.email == email).first()
     if existing_user:
@@ -39,7 +38,7 @@ def login(db:Session, user:schema.UserLogin):
 
 
 
-def get_user_with_email(db:Session, email:str):
+def get_user_with_username(db:Session, email:str):
     user = db.query(models.Users).filter(models.Users.email == email).first()
     if not user:
         return False

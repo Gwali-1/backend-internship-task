@@ -47,7 +47,7 @@ class RecordCreate(BaseModel):
 
 #user info to  create a user account
 class UserCreate(BaseModel):
-    email:str
+    username:str
     password:str
     confirm_password:str
 
@@ -55,7 +55,7 @@ class UserCreate(BaseModel):
         orm_mode=True
 
 class UserLogin(BaseModel):
-    email:str
+    username:str
     password:str
 
     class Config:

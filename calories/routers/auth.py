@@ -1,5 +1,4 @@
-
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 from ..dependencies import get_db_session, create_access_token
 from .. import schema,database_actions
 from sqlalchemy.orm import Session
@@ -14,6 +13,7 @@ router = APIRouter(
     prefix="/auth",
     tags=["Auth"]
 )
+
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 
@@ -22,9 +22,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 @router.post("/create")
 def create_user_account(user: schema.UserCreate, db: Session = Depends(get_db_session)):
-    existing_user = database_actions.get_user_with_email(db, user.email)
+    existing_user = database_actions.get_user_with_username(db, user.username)
     if existing_user:
-        raise HTTPException(status_code=400, detail="Account with email already exist")
+        raise HTTPException(status_code=400, detail="Account with username already exist")
     new_user = database_actions.create_account(db, user)
     if new_user:
         return JSONResponse(status_code=200,content={"detail":"User account created successfully"})
@@ -37,7 +37,7 @@ def create_user_account(user: schema.UserCreate, db: Session = Depends(get_db_se
 
 
 @router.post("/login", response_model=schema.Token)
-def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Response, db:Session=Depends(get_db_session)):
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:Session=Depends(get_db_session)):
     data = {
         "username": form_data.username,
         "password": form_data.password
@@ -55,7 +55,6 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Re
     access_token = create_access_token(
         data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="user_id", value=access_token)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
