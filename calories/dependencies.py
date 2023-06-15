@@ -19,6 +19,7 @@ Invalid_credentials_error = HTTPException(
             )
 
 
+
 #sync session
 def get_db_session():
     db = SESSION_FACTORY()
@@ -26,8 +27,6 @@ def get_db_session():
         yield db
     finally:
         db.close()
-
-
 
 
 
@@ -39,7 +38,6 @@ def auth_token(token: Annotated[str, OAuth2PasswordBearer]):  #grabs token from 
             return True
     except:
         return False
-
 
 
 
@@ -73,6 +71,7 @@ def decode_token(token):
         raise Invalid_credentials_error
 
 
+
 #check password validity
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
@@ -81,5 +80,14 @@ def verify_password(plain_password: str, hashed_password: str):
 #hash password
 def hash_password(password: str):
     return pwd_context.hash(password)
+
+
+def allowed_for_user_crud(user_id:int):
+    pass
+
+
+
+def allowed_for_record_crud(user_id:int):
+    pass
 
 

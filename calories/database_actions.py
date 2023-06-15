@@ -1,7 +1,7 @@
 from . import models , schema
 from sqlalchemy.orm import Session
 from .dependencies  import hash_password, verify_password
-from datetime import date
+from datetime import date,datetime
 
 
 
@@ -44,7 +44,7 @@ def create_account(db:Session, user:schema.UserCreate):
         return False
 
 
-
+#manager/admin
 def change_setting(db:Session, limit:float, user_id:int):
     user_setting = db.query(models.UserSettings).filter(models.UserSettings.user_id == user_id).first()
     if not user_setting:
@@ -91,9 +91,20 @@ def delete_user_with_username(db:Session,username:str):
 
 
 
-#users/admin
+def check_if_below_limit(db:Session, user_id:int) -> bool:
+    user_setting = db.query(models.UserSettings).filter(models.UserSettings.user_id == user_id).first()
+    user_limit = user_setting.calorie_limit
+    user_records = db.query(models.CalorieRecords).filter(models.CalorieRecords.owner==user_id, models.CalorieRecords.date == datetime.now().date).all()
+    if user_records:
+        calories =[x.calories for x in user_records]
+        check = sum(calories) < user_limit
+        return check
+
+
+#regular/admin
 def add_record(db:Session, record:schema.RecordCreate, user_id:int):
-    new_record = models.CalorieRecords(**record.dict(), owner=user_id)
+    check = check_if_below_limit(db,user_id)
+    new_record = models.CalorieRecords(**record.dict(), owner=user_id, below_limit=check)
     db.add(new_record)
     try:
         db.commit()
@@ -115,7 +126,7 @@ def get_user_records(db:Session, user_id:int):
 
 
 
-#admin / users
+#admin / regular
 def get_all_records(db:Session):
     records = db.query(models.CalorieRecords).all()
     return records
