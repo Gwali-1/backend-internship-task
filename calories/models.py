@@ -10,8 +10,8 @@ class Users(Base):
     username = Column(String)
     password = Column(String)
     role = relationship("Roles")
-    settings = relationship("UserSettings")
-    records_entered = relationship("CalorieRecords")
+    settings = relationship("UserSettings", cascade="all, delete")
+    records_entered = relationship("CalorieRecords",cascade="all, delete")
 
 
 

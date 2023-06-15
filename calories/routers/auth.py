@@ -19,7 +19,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 
 
-
 @router.post("/create")
 def create_user_account(user: schema.UserCreate, db: Session = Depends(get_db_session)):
     existing_user = database_actions.get_user_with_username(db, user.username)
@@ -52,7 +51,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:Session
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(user.id)}, expires_delta=access_token_expires
+        data={"sub": str(user.id), "role":user.role[0].role}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

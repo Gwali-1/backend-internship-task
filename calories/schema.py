@@ -8,6 +8,7 @@ class Token(BaseModel):
     token_type: str
 
 
+
 #user setting info
 class Setting(BaseModel):
     calorie_limit:float
@@ -51,7 +52,7 @@ class RecordCreate(BaseModel):
 class UserCreate(BaseModel):
     username: str = Field(min_length=2)
     password: str = Field(min_length=2)
-    confirm_password:str
+    limit:float
 
     class Config:
         orm_mode=True
