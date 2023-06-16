@@ -94,11 +94,12 @@ def delete_user_with_username(db:Session,username:str):
 def check_if_below_limit(db:Session, user_id:int) -> bool:
     user_setting = db.query(models.UserSettings).filter(models.UserSettings.user_id == user_id).first()
     user_limit = user_setting.calorie_limit
-    user_records = db.query(models.CalorieRecords).filter(models.CalorieRecords.owner==user_id, models.CalorieRecords.date == datetime.now().date).all()
+    user_records = db.query(models.CalorieRecords).filter(models.CalorieRecords.owner==user_id, models.CalorieRecords.date == datetime.now().date()).all()
     if user_records:
         calories =[x.calories for x in user_records]
         check = sum(calories) < user_limit
         return check
+    return True
 
 
 #regular/admin
@@ -132,9 +133,16 @@ def get_all_records(db:Session):
     return records
 
 
-def get_records_by_date(db:Session,date:date):
-    records = db.query(models.CalorieRecords).filter(models.CalorieRecords.date == date).all()
-    return records
+
+
+def delete_record(db:Session, record_id:int):
+    user = db.query(models.CalorieRecords).filter(models.CalorieRecords.id == record_id).first()
+    db.delete(user)
+    try:
+        db.commit()
+        return True
+    except:
+        return False
 
 
 

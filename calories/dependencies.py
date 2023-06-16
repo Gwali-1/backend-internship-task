@@ -1,6 +1,6 @@
 from jose import JWTError,jwt
 from  datetime import timedelta, datetime
-from fastapi import HTTPException,status
+from fastapi import HTTPException,status,Query
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
@@ -18,7 +18,7 @@ Invalid_credentials_error = HTTPException(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 #sync session
 def get_db_session():
@@ -31,7 +31,7 @@ def get_db_session():
 
 
 #authenticate token
-def auth_token(token: Annotated[str, OAuth2PasswordBearer]):  #grabs token from authorization header
+def auth_token(token: Annotated[str, Query()]):  #grabs token from query parameter
     try:
         id = decode_token(token)
         if id:
@@ -89,5 +89,4 @@ def allowed_for_user_crud(user_id:int):
 
 def allowed_for_record_crud(user_id:int):
     pass
-
 

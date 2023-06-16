@@ -25,6 +25,11 @@ class Role(BaseModel):
     class Config:
         orm_mode=True
 
+
+
+class Date(BaseModel):
+    date:date
+
 #record info sent as response
 class Record(BaseModel):
     id:int
@@ -32,7 +37,7 @@ class Record(BaseModel):
     calories:float
     date: date
     time:time
-    below_lmit:bool
+    below_limit:bool
 
 
     class Config:
@@ -73,7 +78,7 @@ class User(BaseModel):
     email:str
     role: list[Role]
     settings: list[Setting]
-    records_entered: list[Record]
+    records_entered: list[Record] | None = []
 
     class Config:
         orm_mode=True
