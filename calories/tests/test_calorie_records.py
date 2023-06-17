@@ -3,8 +3,7 @@ from fastapi.testclient import TestClient
 
 
 client = TestClient(app)
-
-TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZXhwIjoxNjg3MDI5ODA1fQ.I0hZc3Lrf01SVWue1nsTC1CHsl90pjCInQkXmDGbJiE"
+TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZXhwIjoxNjg3MDMzMDQ4fQ.z2qI4aviC7epbYyhZAAtbzJ4Vg-5ql8FZqyLVeNo6LU"
 INVALID_TOKEN=""
 
 def test_get_user_records():
