@@ -26,9 +26,9 @@ class Role(BaseModel):
         orm_mode=True
 
 
-
-class Date(BaseModel):
-    date:date
+class RoleUpdate(BaseModel):
+    user_id:int
+    role:str
 
 #record info sent as response
 class Record(BaseModel):
@@ -52,6 +52,11 @@ class RecordCreate(BaseModel):
 
     class Config:
         orm_mode=True
+
+class CalorieUpdate(BaseModel):
+    record_id:int
+    calorie:float
+
 
 #user info to  create a user account
 class UserCreate(BaseModel):

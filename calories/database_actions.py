@@ -82,12 +82,34 @@ def get_users_by_role(db:Session, role:str):
 
 def delete_user_with_username(db:Session,username:str):
     user = db.query(models.Users).filter(models.Users.username == username).first()
-    db.delete(user)
     try:
+        db.delete(user)
         db.commit()
         return True
     except:
         return False
+
+def create_user(db:Session, user:schema.UserCreate):
+    new_user = create_account(db,user)
+    return new_user
+
+
+def change_user_role(db:Session, new_role:schema.RoleUpdate):
+    user_role = db.query(models.Roles).filter(models.Roles.owner_id == new_role.user_id).first()
+    user_role.role = new_role.role
+    try:
+        db.commit()
+        db.refresh(user_role)
+        return True
+    except:
+        return False
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +162,17 @@ def delete_record(db:Session, record_id:int):
     try:
         db.delete(user)
         db.commit()
+        return True
+    except:
+        return False
+
+
+def change_record_calorie(db:Session, new_calorie:schema.CalorieUpdate):
+    record = db.query(models.CalorieRecords).filter(models.CalorieRecords.id == new_calorie.record_id).first()
+    record.calories = new_calorie.calorie
+    try:
+        db.commit()
+        db.refresh(record)
         return True
     except:
         return False
