@@ -5,6 +5,8 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from .database import SESSION_FACTORY
+from sqlalchemy.orm import Session
+from . import models
 
 
 
@@ -35,7 +37,7 @@ def auth_token(token: Annotated[str, Query()]):  #grabs token from query paramet
     try:
         id = decode_token(token)
         if id:
-            return True
+            return id
     except:
         return False
 
@@ -82,11 +84,23 @@ def hash_password(password: str):
     return pwd_context.hash(password)
 
 
-def allowed_for_user_crud(user_id:int):
-    pass
+def allowed_for_user_crud(db:Session,user_id:int):
+    allowed_roles = ["Manager","Admin"]
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    if user.role[0].role not in allowed_roles:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Youre not authorized to perform such operation")
+    return user_id
 
 
 
-def allowed_for_record_crud(user_id:int):
-    pass
+
+def allowed_for_record_crud(db:Session,user_id:int):
+    allowed_roles = ["Regular","Admin"]
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    print(user.role[0].role)
+    if user.role[0].role not in allowed_roles:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Youre not authorized to perform such operation")
+    return user_id
+
+
 

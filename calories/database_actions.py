@@ -137,8 +137,8 @@ def get_all_records(db:Session):
 
 def delete_record(db:Session, record_id:int):
     user = db.query(models.CalorieRecords).filter(models.CalorieRecords.id == record_id).first()
-    db.delete(user)
     try:
+        db.delete(user)
         db.commit()
         return True
     except:
