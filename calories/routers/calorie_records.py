@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,Query
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from ..dependencies import auth_token, get_db_session,allowed_for_record_crud
 from .. import schema,database_actions
 from sqlalchemy.orm import Session
+from typing import Annotated
 
 
 
@@ -50,9 +51,10 @@ def get_record_by_limit(limit:bool, user_id:int = Depends(auth_token), db:Sessio
 
 
 @router.get("/all_records")
-def get_all_records( user_id:int = Depends(auth_token), db:Session = Depends(get_db_session)):
+def get_all_records( user_id:int = Depends(auth_token), db:Session = Depends(get_db_session),page: Annotated[int|None, Query(ge=1)] = 1, limit:Annotated[int|None, Query(ge=1, le=30)]= 1):
     _ = allowed_for_record_crud(db,user_id)
-    records = database_actions.get_all_records(db)
+    offset = (page  - 1) * limit  #get how many records to skip
+    records = database_actions.get_all_records(db, offset, limit)
     if not records:
         pass
     return records

@@ -28,6 +28,7 @@ class Roles(Base):
     id = Column(Integer,primary_key=True,index=True)
     role = Column(String, default="Regular")
     user_id = Column(Integer,ForeignKey("users.id"), nullable=False)
+    users = relationship("Users", back_populates="role")
 
 
 

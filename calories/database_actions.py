@@ -1,7 +1,7 @@
 from . import models , schema
 from sqlalchemy.orm import Session
 from .dependencies  import hash_password, verify_password
-from datetime import date,datetime
+from datetime import datetime
 
 
 
@@ -72,12 +72,12 @@ def login(db:Session, user:schema.UserLogin):
 
 
 #admin/manager
-def get_users(db:Session):
-    users = db.query(models.Users).all()
+def get_users(db:Session, offset:int, limit:int):
+    users = db.query(models.Users).offset(offset).limit(limit).all()
     return users
 
 def get_users_by_role(db:Session, role:str):
-    users = db.query(models.Users).filter(models.Users.role[0].role == role)
+    users = db.query(models.Users).join(models.Roles).filter(models.Roles.role == role).all()
     return users
 
 def delete_user_with_username(db:Session,username:str):
@@ -95,7 +95,7 @@ def create_user(db:Session, user:schema.UserCreate):
 
 
 def change_user_role(db:Session, new_role:schema.RoleUpdate):
-    user_role = db.query(models.Roles).filter(models.Roles.owner_id == new_role.user_id).first()
+    user_role = db.query(models.Roles).filter(models.Roles.user_id == new_role.user_id).first()
     user_role.role = new_role.role
     try:
         db.commit()
@@ -150,8 +150,8 @@ def get_user_records(db:Session, user_id:int):
 
 
 #admin / regular
-def get_all_records(db:Session):
-    records = db.query(models.CalorieRecords).all()
+def get_all_records(db:Session, offset:int, limit:int):
+    records = db.query(models.CalorieRecords).offset(offset).limit(limit).all()
     return records
 
 

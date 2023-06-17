@@ -16,7 +16,7 @@ ALGORITHM = "HS256"
 #exception error
 Invalid_credentials_error = HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials",
+                detail="Could not validate credentials, log in for valid access token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
@@ -39,7 +39,8 @@ def auth_token(token: Annotated[str, Query()]):  #grabs token from query paramet
         if id:
             return id
     except:
-        return False
+        print("no")
+        raise Invalid_credentials_error
 
 
 
@@ -88,7 +89,7 @@ def allowed_for_user_crud(db:Session,user_id:int):
     allowed_roles = ["Manager","Admin"]
     user = db.query(models.Users).filter(models.Users.id == user_id).first()
     if user.role[0].role not in allowed_roles:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Youre not authorized to perform such operation")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Youre not authorized to perform such operation")
     return user_id
 
 

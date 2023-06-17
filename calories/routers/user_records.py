@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,Query
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from ..dependencies import auth_token, get_db_session,allowed_for_user_crud
 from .. import schema,database_actions
 from sqlalchemy.orm import Session
+from typing import Annotated
 
 
 
@@ -15,9 +16,10 @@ router = APIRouter(
 ALLOWED_ROLES = ["Regular", "Admin", "Manager"]
 
 @router.get("/get_users", response_model=list[schema.User])
-def get_user_records(user_id: int = Depends(auth_token), db:Session = Depends(get_db_session)):
+def get_user_records(user_id: int = Depends(auth_token), db:Session = Depends(get_db_session),page:Annotated[int|None,Query(ge=1)]=1, limit:Annotated[int|None, Query(ge=1,le=30)]=1):
+    offset = (page - 1) * limit
     _ = allowed_for_user_crud(db,user_id)
-    users = database_actions.get_users(db)
+    users = database_actions.get_users(db, offset, limit)
     return users
 
 
@@ -25,10 +27,13 @@ def get_user_records(user_id: int = Depends(auth_token), db:Session = Depends(ge
 
 
 
-@router.get("/get_users_by_role/{role}", response_model=list[schema.Record])
+@router.get("/get_users_by_role/{role}", response_model=list[schema.User])
 def get_record_by_limit(role:str, user_id:int = Depends(auth_token), db:Session = Depends(get_db_session)):
+    print(role)
     _ = allowed_for_user_crud(db,user_id)
     users = database_actions.get_users_by_role(db,role)
+    if not users:
+        return
     return users
 
 

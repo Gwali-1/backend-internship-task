@@ -80,7 +80,7 @@ class UserLogin(BaseModel):
 #user info returned when requested
 class User(BaseModel):
     id:int
-    email:str
+    username:str
     role: list[Role]
     settings: list[Setting]
     records_entered: list[Record] | None = []
