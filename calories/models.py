@@ -9,7 +9,7 @@ class Users(Base):
     id = Column(Integer,primary_key=True,index=True)
     username = Column(String)
     password = Column(String)
-    role = relationship("Roles")
+    role = relationship("Roles", cascade="all, delete")
     settings = relationship("UserSettings", cascade="all, delete")
     records_entered = relationship("CalorieRecords",cascade="all, delete")
 

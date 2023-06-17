@@ -82,15 +82,18 @@ def get_users_by_role(db:Session, role:str):
 
 def delete_user_with_username(db:Session,username:str):
     user = db.query(models.Users).filter(models.Users.username == username).first()
+    print(user,"---->")
     try:
         db.delete(user)
         db.commit()
         return True
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 def create_user(db:Session, user:schema.UserCreate):
     new_user = create_account(db,user)
+    print(new_user)
     return new_user
 
 

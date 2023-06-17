@@ -33,7 +33,7 @@ def get_record_by_limit(role:str, user_id:int = Depends(auth_token), db:Session 
     _ = allowed_for_user_crud(db,user_id)
     users = database_actions.get_users_by_role(db,role)
     if not users:
-        return
+        return []
     return users
 
 
@@ -67,7 +67,7 @@ def deleter_record(username:str,user_id:int = Depends(auth_token), db:Session = 
 
 
 
-@router.post("/create_user")
+@router.post("/create_user", response_model=schema.User)
 def create_user(user:schema.UserCreate, user_id:int = Depends(auth_token), db:Session = Depends(get_db_session)):
     _ =  allowed_for_user_crud(db,user_id)
     new_user = database_actions.create_user(db,user)

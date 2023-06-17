@@ -39,7 +39,6 @@ def auth_token(token: Annotated[str, Query()]):  #grabs token from query paramet
         if id:
             return id
     except:
-        print("no")
         raise Invalid_credentials_error
 
 
@@ -65,7 +64,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 def decode_token(token):
     try:
         payload = jwt.decode(token,SECRET_KEY, algorithms=[ALGORITHM])
-        print(payload)
         user_id = payload.get("sub")
         if user_id is None:
             raise  Invalid_credentials_error
@@ -98,7 +96,6 @@ def allowed_for_user_crud(db:Session,user_id:int):
 def allowed_for_record_crud(db:Session,user_id:int):
     allowed_roles = ["Regular","Admin"]
     user = db.query(models.Users).filter(models.Users.id == user_id).first()
-    print(user.role[0].role)
     if user.role[0].role not in allowed_roles:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Youre not authorized to perform such operation")
     return user_id
